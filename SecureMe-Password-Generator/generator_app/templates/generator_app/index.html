@@ -1,0 +1,73 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>SecureMe · Password Generator</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23c6ff3d'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{% static 'generator_app/style.css' %}">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="dot"></span>SecureMe</div>
+    <span class="tag">Nothing is stored. Ever.</span>
+  </header>
+
+  <main class="wrap">
+    <h1>Make a password<br><em>nobody can guess.</em></h1>
+
+    <section class="output" aria-live="polite">
+      <div class="pw-row">
+        <output id="password" class="pw" aria-label="Generated password">Press generate</output>
+        <button id="copy" class="btn ghost" type="button" disabled>Copy</button>
+      </div>
+      <div class="meter" aria-hidden="true"><span id="meter-fill"></span></div>
+      <p class="meter-text"><span id="strength-label">—</span><span id="entropy"></span></p>
+      <p id="tip" class="tip" hidden></p>
+    </section>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-mode="random" type="button">Random</button>
+      <button class="tab" role="tab" aria-selected="false" data-mode="words" type="button">From my words</button>
+    </div>
+
+    <form id="form" class="panel" autocomplete="off" novalidate>
+      <div class="field" id="words-field" hidden>
+        <label for="words">Your words <small>up to {{ max_words }}, separated by spaces</small></label>
+        <input id="words" type="text" placeholder="e.g. lagos sunset music" spellcheck="false" autocomplete="off">
+        <p class="hint">Your words stay readable so you can remember the password. Pick words that aren't your name or birthday.</p>
+      </div>
+
+      <div class="field">
+        <label for="length">Length <output id="length-value">16</output></label>
+        <input id="length" type="range" min="{{ min_length }}" max="{{ max_length }}" value="16">
+      </div>
+
+      <fieldset class="toggles">
+        <legend>Include</legend>
+        <label class="chip random-only"><input type="checkbox" id="upper" checked><span>A–Z</span></label>
+        <label class="chip random-only"><input type="checkbox" id="lower" checked><span>a–z</span></label>
+        <label class="chip"><input type="checkbox" id="digits" checked><span>0–9</span></label>
+        <label class="chip"><input type="checkbox" id="symbols" checked><span>!@#$</span></label>
+      </fieldset>
+
+      <label class="switch">
+        <input type="checkbox" id="avoid">
+        <span class="track"></span>
+        Avoid look-alike characters <small>(1 l I 0 O o)</small>
+      </label>
+
+      <p id="error" class="error" role="alert"></p>
+      <button class="btn primary" type="submit" id="generate">Generate</button>
+    </form>
+  </main>
+
+  <footer class="foot">
+    Passwords are made with Python's <code>secrets</code> module, sent to your screen once, and never saved or logged.
+  </footer>
+
+  <script src="{% static 'generator_app/script.js' %}"></script>
+</body>
+</html>
